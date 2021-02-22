@@ -1,32 +1,54 @@
+import {useEffect} from 'react';
 import {
-  BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  useHistory
 } from "react-router-dom";
-
-import './App.css';
 import ChatPage from './components/ChatPage/ChatPage'
 import LoginPage from './components/LoginPage/LoginPage'
 import RegisterPage from './components/RegisterPage/RegisterPage'
+import firebase from './firebase';
 
+import  {useDispatch , useSelector} from 'react-redux'
+import {setUser} from './redux/actions/user_action'
 function App() {
-  return <Router>
-  
+  let history = useHistory();
+  let dispatch = useDispatch();
+  const isLoading = useSelector(state => state.user.isLoading);
 
-    {/*
-      A <Switch> looks through all its children <Route>
-      elements and renders the first one whose path
-      matches the current URL. Use a <Switch> any time
-      you have multiple routes, but you want only one
-      of them to render at a time
-    */}
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged(user => {
+      console.log('user',user)
+      // 로그인 상태
+      if(user){
+        history.push("/")
+
+        //user 를 redux 에 넣자.
+        dispatch(setUser(user))
+
+      } else {
+        history.push("/login")
+      }
+    })
+  },[])
+  
+  if(isLoading) {
+    return (
+      <div>
+        ...Loading...
+      </div>
+    )
+
+
+  } else {
+  return (
     <Switch>
       <Route exact path="/" component={ChatPage}/>
       <Route exact path="/Login" component={LoginPage}/>
       <Route exact path="/Register" component={RegisterPage}/>
     </Switch>
-</Router>
+    );
+}
 }
 
 export default App;
