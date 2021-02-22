@@ -10,9 +10,6 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
-h3 {
-  font-size : 2rem;
-}
 .auth-wrapper {
   flex-direction: column;
   
@@ -23,7 +20,7 @@ h3 {
 }
 
 .auth-wrapper .form {
-  width: 575px;
+  width: 475px;
   margin: 0 auto;
 }
 
@@ -47,7 +44,7 @@ h3 {
 .auth-wrapper input {
   display: block;
   box-sizing: border-box;
-  width: 300px;
+  width: 100%;
   border: 1px solid black;
   border-radius: 4px;
   padding: 10px 15px;
