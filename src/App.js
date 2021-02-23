@@ -27,20 +27,22 @@ function App() {
         dispatch(setUser(user))
 
       } else {
-        history.push("/login")
+        console.log('pushing head')
+        history.push("/Login")
+        console.log('pushing foot')
       }
     })
   },[])
   
-  if(isLoading) {
-    return (
-      <div>
-        ...Loading...
-      </div>
-    )
+  // if(isLoading) {
+  //   return (
+  //     <div>
+  //       ...Loading...
+  //     </div>
+  //   )
 
 
-  } else {
+  // } else {
   return (
     <Switch>
       <Route exact path="/" component={ChatPage}/>
@@ -48,7 +50,7 @@ function App() {
       <Route exact path="/Register" component={RegisterPage}/>
     </Switch>
     );
-}
+// }
 }
 
 export default App;
