@@ -10,7 +10,8 @@ import RegisterPage from './components/RegisterPage/RegisterPage'
 import firebase from './firebase';
 
 import  {useDispatch , useSelector} from 'react-redux'
-import {setUser} from './redux/actions/user_action'
+import {setUser , clearUser} from './redux/actions/user_action'
+import 'bootstrap/dist/css/bootstrap.min.css';
 function App() {
   let history = useHistory();
   let dispatch = useDispatch();
@@ -29,7 +30,9 @@ function App() {
       } else {
         console.log('pushing head')
         history.push("/Login")
+        dispatch(clearUser())
         console.log('pushing foot')
+
       }
     })
   },[])
