@@ -8,6 +8,11 @@ import firebase from '../../../firebase';
 import {connect} from 'react-redux';
 // Classcomponent 이므로 hook 을 못씀. 유저정보 redux 에서 가져와야함.
 import {setCurrentChatRoom} from '../../../redux/actions/chatRoom_action'
+
+// redux hoox 쓸수있었다면 이렇게..
+// import {useSelector} from 'react-redux';
+// function MessageForm() {
+    // const chatRoom = useSelector(state => state.chatRoom.currentChatRoom)
 export class ChatRooms extends Component {
     state = {
         show: false,
