@@ -7,8 +7,10 @@ function Message({message,user}) {
     const isImage = message => {
         return message.hasOwnProperty("image") && !message.hasOwnProperty("content");
     }
-    const isMessageMine=(message,user) => {
+    const isMessageMine = (message, user) => {
+        if(user) {
         return message.user.id === user.uid 
+        }
     }
     return (
         <div>
