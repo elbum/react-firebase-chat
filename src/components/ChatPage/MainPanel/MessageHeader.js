@@ -5,7 +5,7 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import {FaLock,FaLockOpen} from 'react-icons/fa'
 import {MdFavorite,MdFavoriteBorder} from 'react-icons/md'
-import {InputGroup,FormControl,Image} from 'react-bootstrap'
+import {InputGroup,FormControl,Image, Media} from 'react-bootstrap'
 import {AiOutlineSearch} from 'react-icons/ai'
 import {Accordion,Card,Button} from 'react-bootstrap'
 import {useSelector} from 'react-redux';
@@ -18,7 +18,7 @@ function MessageHeader({handleSearchChange}) {
     const [isFavorited, setIsFavorited] = useState(false);
     const usersRef = firebase.database().ref("users");
     const user = useSelector(state => state.user.currentUser);
-    
+    const userPosts = useSelector(state => state.chatRoom.userPosts);
     useEffect(() => {
         if (chatRoom && user){
             addFavoriteListener(chatRoom.id, user.uid);
@@ -69,6 +69,28 @@ function MessageHeader({handleSearchChange}) {
             setIsFavorited(prev=>!prev)
         }
     }
+
+    const renderUserPosts = (userPosts) => 
+        Object.entries(userPosts)  // 객체를 배열로
+        .sort((a,b) => b[1].count - a[1].count)
+        .map(([key,val],i) => (
+            <Media key={i}>
+                <img 
+                    style={{borderRadius:25}}
+                    width={48}
+                    height={48}
+                    className="mr-3"
+                    src={val.image}
+                    alt={val.name}/>
+                <Media.Body>
+                    <h6>{key}</h6>
+                    <p>
+                        {val.count} 개
+                    </p>
+                </Media.Body>
+            </Media>
+        ))
+    
     return (
         <div style={{
             width:'100%',
@@ -106,7 +128,9 @@ function MessageHeader({handleSearchChange}) {
             </Row>
             <div style={{display:'flex',justifyContent:'flex-end'}}>
                 <p>
-                        <Image src="" />{" "} user name
+                        <Image src={chatRoom&&chatRoom.createdBy.image}
+                            roundedCircle style={{width:'30px',height:'30px'}}/>{" "} 
+                            {chatRoom && chatRoom.createdBy.name}
                 </p>
             </div>
             <Row>
@@ -115,11 +139,13 @@ function MessageHeader({handleSearchChange}) {
                     <Card>
                         <Card.Header style={{padding:'0 1rem'}}>
                         <Accordion.Toggle as={Button} variant="link" eventKey="1">
-                            Click me!
+                            Description
                         </Accordion.Toggle>
                         </Card.Header>
                         <Accordion.Collapse eventKey="1">
-                        <Card.Body>Hello! I'm the body</Card.Body>
+                        <Card.Body>
+                            {chatRoom && chatRoom.description}
+                        </Card.Body>
                         </Accordion.Collapse>
                     </Card>
                     </Accordion>
@@ -129,11 +155,13 @@ function MessageHeader({handleSearchChange}) {
                     <Card>
                         <Card.Header style={{padding:'0 1rem'}}>
                         <Accordion.Toggle as={Button} variant="link" eventKey="1">
-                            Click me!
+                           POST Count
                         </Accordion.Toggle>
                         </Card.Header>
                         <Accordion.Collapse eventKey="1">
-                        <Card.Body>Hello! I'm the body</Card.Body>
+                        <Card.Body>
+                            {userPosts && renderUserPosts(userPosts)}
+                        </Card.Body>
                         </Accordion.Collapse>
                     </Card>
                     </Accordion>
