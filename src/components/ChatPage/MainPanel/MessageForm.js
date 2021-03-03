@@ -15,6 +15,7 @@ function MessageForm() {
     const inputOpenImageRef = useRef();
     const messagesRef = firebase.database().ref("messages");
     const storageRef = firebase.storage().ref();
+    const typingRef = firebase.database().ref("typing")
     const [percentage, setPercentage] = useState(0)
     const isPrivateChatRoom = useSelector(state => state.chatRoom.isPrivateChatRoom)
     const handleChange = (event) => {
@@ -46,6 +47,10 @@ function MessageForm() {
         // saving on firebase
         try {
             await messagesRef.child(chatRoom.id).push().set(createMessage())
+
+            // 메세지를 보낸 다음에 타이핑상태인거 지운다
+            typingRef.child(chatRoom.id).child(user.uid).remove();
+            
             setLoading(false);
             setContent("");
             setErrors([]);
@@ -110,11 +115,24 @@ function MessageForm() {
         }
 
     }
+    const handleKeyDown = () => {
+        if(content) {
+            typingRef
+            .child(chatRoom.id)
+            .child(user.uid)
+            .set(user.displayName)
+        } else {
+            typingRef
+            .child(chatRoom.id)
+            .child(user.uid).remove();
+        }
+    }
     return (
         <div>
             <Form onSubmit={handleSubmit}>
             <Form.Group controlId="exampleForm.ControlTextarea1">
                 <Form.Control 
+                onKeyDown={handleKeyDown}
                 value={content}
                 onChange={handleChange}
                 as="textarea" rows={3} />

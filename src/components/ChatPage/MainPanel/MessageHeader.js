@@ -126,13 +126,16 @@ function MessageHeader({handleSearchChange}) {
                     />
                 </InputGroup></Col>
             </Row>
-            <div style={{display:'flex',justifyContent:'flex-end'}}>
+                {!isPrivateChatRoom && 
+                <div style={{display:'flex',justifyContent:'flex-end'}}>
                 <p>
                         <Image src={chatRoom&&chatRoom.createdBy.image}
                             roundedCircle style={{width:'30px',height:'30px'}}/>{" "} 
                             {chatRoom && chatRoom.createdBy.name}
                 </p>
             </div>
+            }
+            
             <Row>
                 <Col>
                     <Accordion>
