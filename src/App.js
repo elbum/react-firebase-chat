@@ -10,7 +10,8 @@ import RegisterPage from './components/RegisterPage/RegisterPage'
 import firebase from './firebase';
 
 import  {useDispatch , useSelector} from 'react-redux'
-import {setUser} from './redux/actions/user_action'
+import {setUser , clearUser} from './redux/actions/user_action'
+import 'bootstrap/dist/css/bootstrap.min.css';
 function App() {
   let history = useHistory();
   let dispatch = useDispatch();
@@ -29,20 +30,22 @@ function App() {
       } else {
         console.log('pushing head')
         history.push("/Login")
+        dispatch(clearUser())
         console.log('pushing foot')
+
       }
     })
   },[])
   
-  // if(isLoading) {
-  //   return (
-  //     <div>
-  //       ...Loading...
-  //     </div>
-  //   )
+  if(isLoading) {
+    return (
+      <div>
+        ...Loading...
+      </div>
+    )
 
 
-  // } else {
+  } else {
   return (
     <Switch>
       <Route exact path="/" component={ChatPage}/>
@@ -50,7 +53,7 @@ function App() {
       <Route exact path="/Register" component={RegisterPage}/>
     </Switch>
     );
-// }
+}
 }
 
 export default App;
