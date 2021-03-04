@@ -115,7 +115,14 @@ function MessageForm() {
         }
 
     }
-    const handleKeyDown = () => {
+    const handleKeyDown = event => {
+        console.log("event.keycode",event.keyCode)
+        console.log("event.ctrlKey",event.ctrlKey)
+        
+        // ctrl + enter 일때
+        if(event.ctrlKey && event.keyCode===13) {
+            handleSubmit();
+        }
         if(content) {
             typingRef
             .child(chatRoom.id)

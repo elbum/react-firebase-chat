@@ -5,7 +5,10 @@ import MessageForm from './MessageForm';
 import {connect} from 'react-redux';
 import firebase from '../../../firebase'
 import {setUserPosts} from '../../../redux/actions/chatRoom_action'
+import Skeleton from '../../../commons/Skeleton'
 export class MainPanel extends Component {
+    messageEndRef = React.createRef();
+
     state = {
         messages: [],
         messagesRef: firebase.database().ref("messages"),
@@ -22,6 +25,11 @@ export class MainPanel extends Component {
         if(chatRoom){
             this.addMessagesListeners(chatRoom.id)
             this.addTypingListeners(chatRoom.id)
+        }
+    }
+    componentDidUpdate() {
+        if(this.messageEndRef){
+            this.messageEndRef.scrollIntoView({behavior:"smooth"})
         }
     }
     componentWillMount(){
@@ -162,8 +170,19 @@ export class MainPanel extends Component {
         </span>
     ))
 
+    // array constructor 를 사용해서 10번 반복
+    renderMessageSkeleton = (loading) => 
+        loading && (
+            <>
+             {[...Array(10)].map((undefine,i)=>(
+                 <Skeleton key={i}/>
+             ))}
+            </>
+        )
+
+        
     render() {
-        const {messages,searchTerm,searchResults,typingUsers}=this.state;
+        const {messages,searchTerm,searchResults,typingUsers,messagesLoading}=this.state;
 
         return (
             <div
@@ -179,10 +198,15 @@ export class MainPanel extends Component {
                     marginBottom:'1rem',
                     overflowY:'auto'
                 }}>
+                    {/* 스켈레톤 */}
+                    {this.renderMessageSkeleton(messagesLoading)}
+
                     {searchTerm? this.renderMessages(searchResults) 
                     : this.renderMessages(messages) }
                     {this.renderTypingUsers(typingUsers)}
                     
+                    {/* 스크롤링을 위해 요 div 를 계속 참고할거다. */}
+                    <div ref={node => (this.messageEndRef = node)}/>
                 </div>
                 <MessageForm/>
                 
