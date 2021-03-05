@@ -38,6 +38,10 @@ export class ChatRooms extends Component {
     //destroy 할떄
     componentWillUnmount() {
         this.state.chatRoomsRef.off();
+
+        this.state.chatRooms.forEach(chatRoom => {
+            this.state.messagesRef.child(chatRoom.id).off();
+        })
     }
     setFirstChatRoom = () => {
         const firstChatRoom = this.state.chatRooms[0]
